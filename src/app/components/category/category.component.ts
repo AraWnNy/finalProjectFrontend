@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-category',
@@ -12,11 +13,13 @@ export class CategoryComponent implements OnInit {
 
   categories: Category[] = [];
 
-  constructor(private categoryService:CategoryService) {
+  currentCategory?:Category;
+
+  constructor(private categoryService:CategoryService) {}
+
+  ngOnInit(): void {
     this.getCategories();
   }
-
-  ngOnInit(): void {}
 
   getCategories(){
     this.categoryService.getCategories().subscribe(response=>{
@@ -25,4 +28,27 @@ export class CategoryComponent implements OnInit {
       }
     });
   }
+
+  setCurrentCategory(category:Category){
+    this.currentCategory = category;
+  }
+
+  getCurrentCategoryClass(category:Category){
+    if(category == this.currentCategory){
+      return "list-group-item active"
+    }
+    return "list-group-item"
+  }
+
+  getAllCategoryClass(){
+    if(!this.currentCategory){
+      return "list-group-item active";
+    }
+    return "list-group-item";
+  }
+  resetCurrentCategory(){
+    this.currentCategory = undefined;
+  }
 }
+
+
